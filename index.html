@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NUESTROS MOMENTOS 2025</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #1b2735, #090a0f);
+      color: #f1f1f1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      margin-top: 50px;
+      font-family: 'Cinzel', serif;
+      font-size: clamp(30px, 6vw, 48px);
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      text-align: center;
+      animation: titleFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes titleFloat {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .subtitle {
+      opacity: 0.75;
+      margin-bottom: 45px;
+      text-align: center;
+    }
+
+    /* MONTH BUTTONS */
+    .months {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 900px;
+      margin-bottom: 40px;
+    }
+
+    .month-btn {
+      position: relative;
+      padding: 18px 30px;
+      font-size: 16px;
+      letter-spacing: 1px;
+      border-radius: 40px;
+      border: none;
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(135deg, #283048, #859398);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.45);
+      transition: all 0.35s ease;
+    }
+
+    .month-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 40px;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .month-btn:hover::before {
+      opacity: 1;
+    }
+
+    .month-btn:hover {
+      transform: translateY(-6px) scale(1.05);
+    }
+
+    .month-btn.active {
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      box-shadow: 0 0 25px rgba(0,198,255,0.8);
+      transform: scale(1.1);
+    }
+
+    .year-btn {
+      background: linear-gradient(135deg, #42275a, #734b6d);
+    }
+
+    /* CAROUSEL */
+    .carousel {
+      width: 94%;
+      max-width: 580px;
+      background: rgba(20,25,35,0.85);
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
+      padding: 24px;
+      text-align: center;
+      display: none;
+      opacity: 0;
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.35s ease;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.7);
+    }
+
+    .carousel.show {
+      display: block;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .carousel img {
+      width: 100%;
+      border-radius: 22px;
+      margin-bottom: 16px;
+      animation: imgEnter 0.35s ease;
+    }
+
+    @keyframes imgEnter {
+      from { opacity: 0; transform: scale(0.9) rotate(-1deg); }
+      to { opacity: 1; transform: scale(1) rotate(0); }
+    }
+
+    .carousel p {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      animation: textFade 0.35s ease;
+    }
+
+    @keyframes textFade {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .arrow {
+      font-size: 32px;
+      cursor: pointer;
+      transition: transform 0.25s;
+    }
+
+    .arrow:hover { transform: scale(1.3); }
+
+    .dots {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.35);
+      transition: transform 0.25s, background 0.25s;
+    }
+
+    .dot.active {
+      background: #00c6ff;
+      transform: scale(1.4);
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 24px;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>NUESTROS MOMENTOS 2025</h1>
+  <div class="subtitle">Un recorrido visual de este 2025</div>
+
+  <div class="months">
+    <button class="month-btn" onclick="openMonth('septiembre', this)">Septiembre</button>
+    <button class="month-btn" onclick="openMonth('octubre', this)">Octubre</button>
+    <button class="month-btn" onclick="openMonth('noviembre', this)">Noviembre</button>
+    <button class="month-btn" onclick="openMonth('diciembre', this)">Diciembre</button>
+    <button class="month-btn year-btn" onclick="openYear(this)">2026</button>
+  </div>
+
+  <div class="carousel" id="carousel">
+    <img id="carouselImg" src="" alt="">
+    <p id="carouselText"></p>
+    <div class="controls">
+      <span class="arrow" onclick="prevSlide()">❮</span>
+      <span class="arrow" onclick="nextSlide()">❯</span>
+    </div>
+    <div class="dots" id="dots"></div>
+  </div>
+
+  <!-- VISTA 2026 -->
+  <div class="carousel" id="year2026">
+    <h2 style="font-family: 'Cinzel', serif; letter-spacing:4px; margin-bottom:20px;">2026</h2>
+    <p style="opacity:.85; margin-bottom:20px;">Este 2025, lo mejor que me pasó en toda mi vida fuiste tú. Estoy completamente y perdidamente enamorado de ti. Y sé que este 2026 todo va a salir bien, porque seremos nosotros. El QR es una canción que te dedico con todo mi corazón. Feliz 2026 🖤✨. Nunca olvides que te quiero muchísimo Saul, mi profe, mi bomnito, mi psyduck, mi pechocho, mi todo 🖤✨</p>
+    <img src="imagen2026.jpg" style="width:100%; border-radius:22px; animation: imgEnter .4s ease;" />
+  </div>
+
+  <footer>Gracias por ser tú ✨</footer>
+
+  <script>
+    const data = {
+      septiembre: [
+        { img: 'imagen1.jpg', text: '19 de Septiembre — el primer día que nos vimos jiji, fue raro y tal vez te preguntes porque puse esta foto, pero es que fue la primera vez que nos conocimos jeje...(y tengo esa foto guardada en el chat xd)' },
+        { img: 'imagen2.jpg', text: '29 de Septiembre — el over!! jaja, pos fue la primera vez que salimos jiji, no sabes lo nervioso que estaba, no sabia que decir o que hablar jaja, desde esa vez siempre me pusiste nervioso 👉🏻👈🏻' }
+      ],
+      octubre: [
+        { img: 'imagen3.jpg', text: '13 de Octubre — era 1 día antes de tu cumple jiji, recuerdo que tenia un super discurso que darte, pero me pusiste muy nervioso jiji, y el abrazo aaaaaah el abrazooo ✨✨✨ (la foto es de la suculenta que me regalaste jiji, esta en mi casa ahora)' },
+        { img: 'imagen4.jpg', text: '20 de Octubre - fue cuando fuimos a ver el cadáver de la novia jiji (que hemosha pelicula, pero tu mas jiji), y tan bonito el majin buu jiji' }
+      ],
+      noviembre: [
+        { img: 'imagen5.jpg', text: '10 de Noviembre - como podria olvidar esta salida jiji, fue un día tan lindo... ' },
+        { img: 'imagen6.jpg', text: '19 de Noviembre - cuando fuimos a las alasitas, te prometo que ese día no me queria ir, ni separar de ti, simplemente todo fue hemosho, todo todo 🖤✨' },
+        { img: 'imagen7.jpg', text: 'Y pos pongo esta foto poquee en cierto sentido somos los 2 jiji, somos nosotros✨' }
+      ],
+      diciembre: [
+        { img: 'imagen8.jpg', text: '10 de Diciembre - cuando te gane en mario party sisi xdxd' },
+        { img: 'imagen9.jpg', text: '15 de Diciembre - nuestro primer besho jiji, cuando supiste que me gustas muchísimo 👉🏻👈🏻🖤✨' },
+        { img: 'imagen10.jpg', text: '21 de Diciembre - cuando me regalaste la skin en fortnite 🥺🖤✨' },
+        { img: 'imagen11.jpg', text: '23 de Diciembre - me diste el regalo que tanto me gusta 🥺, te quiero muchoooooooo 🖤✨' },
+        { img: 'imagen12.jpg', text: '31 de Diciembre - y pues el último día del año...el año que me salvaste bomnito🖤✨' }
+      ]
+    };
+
+    let currentMonth = null;
+    let index = 0;
+
+    function openMonth(month, btn) {
+  // 🔹 OCULTAR VISTA 2026 SI ESTÁ ABIERTA
+  const year = document.getElementById('year2026');
+  year.classList.remove('show');
+  year.style.display = 'none';
+
+  document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  currentMonth = month;
+  index = 0;
+
+  const carousel = document.getElementById('carousel');
+  carousel.style.display = 'block';
+  requestAnimationFrame(() => carousel.classList.add('show'));
+  updateSlide();
+}
+
+
+    function updateSlide() {
+      const slide = data[currentMonth][index];
+      document.getElementById('carouselImg').src = slide.img;
+      document.getElementById('carouselText').innerText = slide.text;
+      updateDots();
+    }
+
+    function updateDots() {
+      const dotsContainer = document.getElementById('dots');
+      dotsContainer.innerHTML = '';
+      data[currentMonth].forEach((_, i) => {
+        const dot = document.createElement('div');
+        dot.className = 'dot' + (i === index ? ' active' : '');
+        dotsContainer.appendChild(dot);
+      });
+    }
+
+    function nextSlide() {
+      index = (index + 1) % data[currentMonth].length;
+      updateSlide();
+    }
+
+    function openYear(btn) {
+      document.querySelectorAll('.month-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      document.getElementById('carousel').classList.remove('show');
+      document.getElementById('carousel').style.display = 'none';
+
+      const year = document.getElementById('year2026');
+      year.style.display = 'block';
+      requestAnimationFrame(() => year.classList.add('show'));
+    }
+
+    function prevSlide() {
+      index = (index - 1 + data[currentMonth].length) % data[currentMonth].length;
+      updateSlide();
+    }
+  </script>
+
+</body>
+</html>
